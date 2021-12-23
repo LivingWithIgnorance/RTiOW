@@ -1,11 +1,17 @@
 using Printf
+include("vec3.jl")
+include("color.jl")
+
+println(typeof(color))
 
 function main()
+    #Image
     imageWidth = 256
     imageHeight = 256
 
     file = open("image.ppm","w")
     
+    #Render
     write(file,"P3\n")
     write(file,string(imageWidth) * " ")
     write(file,string(imageHeight))
@@ -16,21 +22,13 @@ function main()
         @printf("\nScanlines remaining: %d",j)
         i = 0
         while i < imageWidth
-            r = i / (imageWidth - 1)
-            g = j / (imageHeight - 1)
-            b = 0.25
-
-            ir = trunc(UInt8,255.999 * r)
-            ig = trunc(UInt8,255.999 * g)
-            ib = trunc(UInt8,255.999 * b)
-
-            output = string(ir) * " " * string(ig) * " " * string(ib) * "\n"
-            write(file, output)
-
+            pixel_color = color(i/(imageWidth-1),j/(imageHeight-1),0.25)
+            write(file, write_color(pixel_color))
             i = i + 1
         end
         j = j - 1
     end
+    close(file)
     println("\nDone!")
 end
 

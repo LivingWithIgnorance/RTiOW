@@ -1,4 +1,6 @@
-struct vec3
+import Base
+
+mutable struct vec3
     x::Float64
     y::Float64
     z::Float64
@@ -6,7 +8,7 @@ struct vec3
     vec3(e0::Float64,e1::Float64,e2::Float64) = new(e0,e1,e2)
 end
 
-function -(v::vec3)
+function Base.:-(v::vec3)
     return vec3(-v.x,-v.y,-v.z)
 end
 
@@ -36,31 +38,31 @@ function length_squared(v1::vec3)
     return v1.x * v1.x + v1.y * v1.y + v1.z * v1.z
 end
 
-function string(v::vec3)
+function Base.string(v::vec3)
     return string(v.x) * " " * string(v.y) * " " * string(v.z)
 end
 
-function +(v1::vec3, v2::vec3)
+function Base.:+(v1::vec3, v2::vec3)
     return vec3(v1.x+v2.x,v1.y+v2.y,v1.z+v2.z)
 end
 
-function -(v1::vec3, v2::vec3)
+function Base.:-(v1::vec3, v2::vec3)
     return vec3(v1.x-v2.x,v1.y-v2.y,v1.z-v2.z)
 end
 
-function *(v1::vec3, v2::vec3)
+function Base.:*(v1::vec3, v2::vec3)
     return vec3(v1.x*v2.x,v1.y*v2.y,v1.z*v2.z)
 end
 
-function *(v::vec3, amount::Float64)
+function Base.:*(v::vec3, amount::Float64)
     return vec3(v.x*amount,v.y*amount,v.z*amount)
 end
 
-function *(amount::Float64,v::vec3)
+function Base.:*(amount::Float64,v::vec3)
     return v * amount
 end
 
-function /(v::vec3, amount::Float64)
+function Base.:/(v::vec3, amount::Float64)
     return (1/amount) * v
 end
 
@@ -79,12 +81,5 @@ function unit_vector(v::vec3)
     return v / length(v)
 end
 
-
-
-
-function 
-
-vector = vec3()
-vt = vec3(1.2,34.5,123.3)
-println(vector)
-println(vt)
+const point3 = vec3
+const color = vec3 
