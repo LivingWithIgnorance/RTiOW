@@ -3,11 +3,31 @@ include("vec3.jl")
 include("color.jl")
 include("ray.jl")
 
+
+function hit_sphere(center::point3,radius::Float64,r::ray)
+    oc = r.origin - center
+    a = dot(r.direction,r.direction)
+    b = 2.0 * dot(oc,r.direction)
+    c = dot(oc,oc) - radius*radius
+    discriminant = b*b - 4*a*c
+    if discriminant < 0
+        return -1.0
+    else
+        return (-b - sqrt(discriminant)) / (2.0* a)
+    end
+end
+
 function ray_color(r::ray)
+    t = hit_sphere(point3(0.0,0.0,-1.0),0.5,r)
+    if t > 0.0
+        N = unit_vector(at(r,t) - vec3(0.0,0.0,-1.0))
+        return 0.5*color(N.x+1.0,N.y+1.0,N.z+1.0)
+    end
     unit_direction = unit_vector(r.direction)
-    t = 0.5*(unit_direction.y + 1)
+    t = 0.5*(unit_direction.y + 1.0)
     return (1.0-t)*color(1.0,1.0,1.0) + t*color(0.5,0.7,1.0)
 end
+
 
 
 function main()
