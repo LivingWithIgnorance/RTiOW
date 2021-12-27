@@ -2,33 +2,18 @@ using Printf
 include("vec3.jl")
 include("color.jl")
 include("ray.jl")
+include("hittable_list.jl")
+include("sphere.jl")
 
-
-function hit_sphere(center::point3,radius::Float64,r::ray)
-    oc = r.origin - center
-    a = dot(r.direction,r.direction)
-    b = 2.0 * dot(oc,r.direction)
-    c = dot(oc,oc) - radius*radius
-    discriminant = b*b - 4*a*c
-    if discriminant < 0
-        return -1.0
-    else
-        return (-b - sqrt(discriminant)) / (2.0* a)
-    end
-end
-
-function ray_color(r::ray)
-    t = hit_sphere(point3(0.0,0.0,-1.0),0.5,r)
-    if t > 0.0
-        N = unit_vector(at(r,t) - vec3(0.0,0.0,-1.0))
-        return 0.5*color(N.x+1.0,N.y+1.0,N.z+1.0)
+function ray_color(r::ray, world::hittable)
+    rec = hit_record()
+    if (hit(world,r,0.0,Inf,rec))
+        return 0.5 * (rec.normal + color(1.0,1.0,1.0))
     end
     unit_direction = unit_vector(r.direction)
     t = 0.5*(unit_direction.y + 1.0)
     return (1.0-t)*color(1.0,1.0,1.0) + t*color(0.5,0.7,1.0)
 end
-
-
 
 function main()
     #Image
@@ -37,6 +22,12 @@ function main()
     image_height = trunc(UInt16,image_width/aspect_ratio)
 
     file = open("image.ppm","w")
+
+    # World
+
+    world = hittable_list()
+    add(world,sphere(point3(0.0,0.0,-1.0),0.5))
+    add(world,sphere(point3(0.0,-100.5,-1.0),100.0))
 
     #Camera
 
@@ -63,7 +54,7 @@ function main()
             u = i / (image_width-1)
             v = j / (image_height-1)
             r = ray(origin,lower_left_corner + u * horizontal + v * vertical - origin)
-            pixel_color = ray_color(r)
+            pixel_color = ray_color(r,world)
             write(file, write_color(pixel_color))
             i = i + 1
         end
