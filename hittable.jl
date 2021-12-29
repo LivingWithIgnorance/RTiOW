@@ -10,8 +10,7 @@ mutable struct hit_record
 end
 
 function set_face_normal(rec::hit_record,r::ray,outward_normal::vec3)
-    front_face = dot(r.direction,outward_normal) < 0
-    rec.normal = front_face ? outward_normal : -outward_normal
+    rec.normal =  (dot(r.direction,outward_normal) < 0) ? outward_normal : -outward_normal
 end
 
 abstract type hittable end
