@@ -101,5 +101,18 @@ function random_in_unit_sphere()
     end
 end
 
+function random_unit_vector()
+    return unit_vector(random_in_unit_sphere())
+end
+
+function random_in_hemisphere(normal::vec3)
+    in_unit_sphere = random_in_unit_sphere()
+    if (dot(in_unit_sphere,normal) > 0.0) #in the hemisphere as the normal
+        return in_unit_sphere
+    else
+        return -in_unit_sphere
+    end
+end
+
 const point3 = vec3
 const color = vec3 

@@ -15,7 +15,7 @@ function ray_color(r::ray, world::hittable,depth::Int)
     end
 
     if (hit(world,r,0.001,Inf,rec))
-        target = rec.p + rec.normal + random_in_unit_sphere()
+        target = rec.p + rec.normal + random_unit_vector()
         return 0.5 * ray_color(ray(rec.p, target-rec.p), world, depth-1)
     end
     unit_direction = unit_vector(r.direction)
