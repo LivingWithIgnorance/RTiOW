@@ -7,10 +7,16 @@ include("sphere.jl")
 include("camera.jl")
 include("rtweekend.jl")
 
-function ray_color(r::ray, world::hittable)
+function ray_color(r::ray, world::hittable,depth::Int)
     rec = hit_record()
-    if (hit(world,r,0.0,Inf,rec))
-        return 0.5 * (rec.normal + color(1.0,1.0,1.0))
+    #A depth to safeguard against blowing the stack on a lot of recursive calls. AKA Limiting child rays.
+    if depth<= 0
+        return color(0.0,0.0,0.0)
+    end
+
+    if (hit(world,r,0.001,Inf,rec))
+        target = rec.p + rec.normal + random_in_unit_sphere()
+        return 0.5 * ray_color(ray(rec.p, target-rec.p), world, depth-1)
     end
     unit_direction = unit_vector(r.direction)
     t = 0.5*(unit_direction.y + 1.0)
@@ -23,6 +29,7 @@ function main()
     image_width = 400
     image_height = trunc(UInt16,image_width/aspect_ratio)
     samples_per_pixel = 100
+    max_depth = 50
 
     file = open("image.ppm","w")
 
@@ -49,10 +56,10 @@ function main()
             pixel_color = color(0.0,0.0,0.0)
             s = 0
             while s < samples_per_pixel
-                u = (i + random_double()) / (image_width - 1)
-                v = (j + random_double()) / (image_height -1)
+                u = (i + random_float()) / (image_width - 1)
+                v = (j + random_float()) / (image_height -1)
                 r = get_ray(cam,u,v)
-                pixel_color += ray_color(r,world)
+                pixel_color += ray_color(r,world,max_depth)
                 s += 1
             end
             write(file, write_color(pixel_color,samples_per_pixel))

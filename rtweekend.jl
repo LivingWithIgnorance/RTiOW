@@ -1,10 +1,10 @@
 
-function random_double()
+function random_float()
     return rand(Float64)
 end
 
-function random_double(min::Float64,max::Float64)
-    return min + (max-min) * random_double()
+function random_float(min::Float64,max::Float64)
+    return min + (max-min) * random_float()
 end
 
 function clamp(x::Float64,min::Float64,max::Float64)

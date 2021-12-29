@@ -1,3 +1,4 @@
+include("rtweekend.jl")
 import Base
 
 mutable struct vec3
@@ -79,6 +80,25 @@ end
 
 function unit_vector(v::vec3)
     return v / length(v)
+end
+
+function random(v::vec3=vec3(random_float(),random_float(),random_float()))
+    return v
+end
+
+function random(min::Float64,max::Float64,v::vec3=vec3())
+    v.x = random_float(min,max)
+    v.y = random_float(min,max)
+    v.z = random_float(min,max)
+    return v
+end
+
+function random_in_unit_sphere()
+    while true
+        p = random(-1.0,1.0)
+        if length_squared(p) >= 1 continue end
+        return p
+    end
 end
 
 const point3 = vec3
