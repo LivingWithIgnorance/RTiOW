@@ -1,6 +1,5 @@
+include("hittable.jl")
 
-
-abstract type material end
 
 function scatter(m::material,r_in::ray,rec::hit_record,attenuation::color,scattered::ray)
     return false
@@ -17,20 +16,31 @@ function scatter(l::lambertian,r_in::ray,rec::hit_record,attenuation::color,scat
     if near_zero(scatter_direction)
         scatter_direction = rec.normal
     end
-    scattered = ray(rec.p,scatter_direction)
-    attenuation = l.albedo
+    #argument reassignment
+    scattered.origin = rec.p
+    scattered.direction = scatter_direction
+    attenuation.x = l.albedo.x
+    attenuation.y = l.albedo.y
+    attenuation.z = l.albedo.z
     return true
 end
 
 struct metal <: material
     albedo::color
-    metal(a::color) = new(a)
+    fuzz::Float64
+    metal(a::color,f::Float64) = new(a,(f < 1 ? f : 1))
 end
 
 function scatter(m::metal,r_in::ray,rec::hit_record,attenuation::color,scattered::ray)
     reflected = reflect(unit_vector(r_in.direction), rec.normal)
-    scattered = ray(rec.p,reflected)
-    attenuation = m.albedo
+    #argument reassignment
+    scattered.origin = rec.p
+    scattered.direction = reflected + m.fuzz*random_in_unit_sphere()
+    attenuation.x = m.albedo.x
+    attenuation.y = m.albedo.y
+    attenuation.z = m.albedo.z
     return dot(scattered.direction,rec.normal) > 0
 end
+
+
 

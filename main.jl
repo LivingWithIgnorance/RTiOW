@@ -6,7 +6,7 @@ include("sphere.jl")
 include("camera.jl")
 include("rtweekend.jl")
 include("hittable_list.jl")
-include("hittable.jl")
+include("material.jl")
 
 
 function ray_color(r::ray, world::hittable,depth::Int)
@@ -45,8 +45,8 @@ function main()
 
     material_ground = lambertian(color(0.8,0.8,0.0))
     material_center = lambertian(color(0.7,0.3,0.3))
-    material_left = metal(color(0.8,0.8,0.8))
-    material_right = metal(color(0.8,0.6,0.2))
+    material_left = metal(color(0.8,0.8,0.8),0.3)
+    material_right = metal(color(0.8,0.6,0.2),1.0)
     
 
     add(world,sphere(point3(0.0,-100.5,-1.0),100.0,material_ground))
