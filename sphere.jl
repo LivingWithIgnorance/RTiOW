@@ -1,10 +1,13 @@
-include("ray.jl")
+#include("ray.jl")
 include("hittable.jl")
+#include("material.jl")
 
 mutable struct sphere <: hittable
     center::point3
     radius::Float64
+    mat_ptr::material
     sphere(cen::point3,r::Float64) = new(cen,r)
+    sphere(cen::point3,r::Float64,m::material) = new(cen,r,m)
 end
 
 function hit(s::sphere,r::ray,t_min::Float64,t_max::Float64,rec::hit_record)
@@ -35,6 +38,7 @@ function hit(s::sphere,r::ray,t_min::Float64,t_max::Float64,rec::hit_record)
     rec.p = at(r,rec.t)
     outward_normal = (rec.p - s.center) / s.radius
     set_face_normal(rec,r,outward_normal)
+    rec.mat_ptr = s.mat_ptr
 
     return true
 end

@@ -2,10 +2,12 @@ using Printf
 include("vec3.jl")
 include("color.jl")
 include("ray.jl")
-include("hittable_list.jl")
 include("sphere.jl")
 include("camera.jl")
 include("rtweekend.jl")
+include("hittable_list.jl")
+include("hittable.jl")
+
 
 function ray_color(r::ray, world::hittable,depth::Int)
     rec = hit_record()
@@ -15,8 +17,12 @@ function ray_color(r::ray, world::hittable,depth::Int)
     end
 
     if (hit(world,r,0.001,Inf,rec))
-        target = rec.p + rec.normal + random_unit_vector()
-        return 0.5 * ray_color(ray(rec.p, target-rec.p), world, depth-1)
+        scattered = ray()
+        attenuation = color()
+        if scatter(rec.mat_ptr,r,rec,attenuation,scattered)
+            return attenuation * ray_color(scattered,world,depth-1)
+        end
+        return color(0.0,0.0,0.0)
     end
     unit_direction = unit_vector(r.direction)
     t = 0.5*(unit_direction.y + 1.0)
@@ -36,8 +42,18 @@ function main()
     # World
 
     world = hittable_list()
-    add(world,sphere(point3(0.0,0.0,-1.0),0.5))
-    add(world,sphere(point3(0.0,-100.5,-1.0),100.0))
+
+    material_ground = lambertian(color(0.8,0.8,0.0))
+    material_center = lambertian(color(0.7,0.3,0.3))
+    material_left = metal(color(0.8,0.8,0.8))
+    material_right = metal(color(0.8,0.6,0.2))
+    
+
+    add(world,sphere(point3(0.0,-100.5,-1.0),100.0,material_ground))
+    add(world,sphere(point3(0.0,0.0,-1.0),0.5, material_center))
+    add(world,sphere(point3(-1.0,0.0,-1.0),0.5,material_left))
+    add(world,sphere(point3(1.0,0.0,-1.0),0.5,material_right))
+
 
     #Camera
     cam = camera()
@@ -70,7 +86,6 @@ function main()
     close(file)
     println("\nDone!")
 end
-
 main()
 
 

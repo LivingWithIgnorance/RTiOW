@@ -1,6 +1,6 @@
-include("rtweekend.jl")
-include("vec3.jl")
-include("ray.jl")
+#include("rtweekend.jl")
+#include("vec3.jl")
+#include("ray.jl")
 
 mutable struct camera
     origin::point3

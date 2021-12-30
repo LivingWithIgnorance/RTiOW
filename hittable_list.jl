@@ -1,4 +1,3 @@
-include("vec3.jl")
 include("hittable.jl")
 
 mutable struct hittable_list <: hittable
@@ -23,11 +22,12 @@ function hit(hl::hittable_list,r::ray,t_min::Float64,t_max::Float64,rec::hit_rec
         if hit(object,r,t_min,closest_so_far,temp_rec)
             hit_anything = true
             closest_so_far = temp_rec.t
-            #reassign record
+            #reassign record 
             rec.front_face = temp_rec.front_face
             rec.normal = temp_rec.normal
             rec.p = temp_rec.p
             rec.t = temp_rec.t
+            rec.mat_ptr = temp_rec.mat_ptr
         end
     end
 

@@ -1,8 +1,10 @@
-include("vec3.jl")
+#include("vec3.jl")
 
 mutable struct ray
     origin::point3
     direction::vec3
+    #this will allow us to create empty rays by setting their fields to #undef
+    ray() = new()
     ray(origin::point3,direction::vec3) = new(origin,direction)
 end
 

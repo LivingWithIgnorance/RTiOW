@@ -1,11 +1,11 @@
-include("rtweekend.jl")
+#include("rtweekend.jl")
 import Base
 
 mutable struct vec3
     x::Float64
     y::Float64
     z::Float64
-    vec3() = new(0.0,0.0,0.0)
+    vec3() = new()
     vec3(e0::Float64,e1::Float64,e2::Float64) = new(e0,e1,e2)
 end
 
@@ -114,5 +114,15 @@ function random_in_hemisphere(normal::vec3)
     end
 end
 
-const point3 = vec3
-const color = vec3 
+function near_zero(v::vec3)
+    s = 1e-8
+    return (abs(v.x) < s) && (abs(v.y) < s) && (abs(v.z) < s)
+end
+
+function reflect(v::vec3,n::vec3)
+    return v- 2 * dot(v,n)*n
+end
+
+#Type aliases
+point3 = vec3
+color = vec3 
