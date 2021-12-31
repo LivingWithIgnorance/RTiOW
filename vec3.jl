@@ -129,6 +129,15 @@ function refract(uv::vec3,n::vec3,etai_over_etat::Float64)
     return r_out_perp + r_out_parallel
 end
 
+function random_in_unit_disc()
+    while true
+        p = vec3(random_float(-1.0,1.0), random_float(-1.0,1.0),0.0)
+        if length_squared(p) >= 1 continue end
+        return p
+    end
+end
+
+
 #Type aliases
 point3 = vec3
 color = vec3 

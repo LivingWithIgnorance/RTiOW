@@ -56,7 +56,13 @@ function main()
 
 
     #Camera
-    cam = camera(point3(-2.0,2.0,1.0), point3(0.0,0.0,-1.0), vec3(0.0,1.0,0.0), 20.0, aspect_ratio)
+    lookfrom = point3(3.0,3.0,2.0)
+    lookat = point3(0.0,0.0,-1.0)
+    vup = vec3(0.0,1.0,0.0)
+    dist_to_focus = length(lookfrom - lookat)
+    aperture = 2.0
+
+    cam = camera(lookfrom,lookat,vup,20.0,aspect_ratio,aperture,dist_to_focus)
     
     #Render
     write(file,"P3\n")
