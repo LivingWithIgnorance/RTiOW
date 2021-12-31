@@ -60,17 +60,24 @@ function scatter(d::dielectric,r_in::ray,rec::hit_record,attenuation::color,scat
     cannot_refract = refraction_ratio * sin_theta > 1.0
     direction = vec3()
 
-    if cannot_refract
+    if cannot_refract || reflectance(cos_theta,refraction_ratio) > random_float()
         direction = reflect(unit_direction, rec.normal)
-        scattered.direction = direction
     else
         direction = refract(unit_direction,rec.normal,refraction_ratio)
-        scattered.direction = direction
     end
 
     scattered.origin = rec.p
+    scattered.direction = direction
     return true
 end
+
+function reflectance(cosine::Float64,ref_idx::Float64)
+    #Schlick's approximation for reflectance
+    r0 = (1-ref_idx) / (1+ref_idx)
+    r0 = r0*r0
+    return r0 + (1-r0)*((1-cosine)^5)
+end
+
 
 
 
