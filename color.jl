@@ -1,4 +1,3 @@
-#include("vec3.jl")
 
 function write_color(pixel_color::color,samples_per_pixel::Int)
     r = pixel_color.x

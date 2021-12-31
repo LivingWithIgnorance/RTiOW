@@ -1,6 +1,4 @@
-#include("ray.jl")
 include("hittable.jl")
-#include("material.jl")
 
 mutable struct sphere <: hittable
     center::point3

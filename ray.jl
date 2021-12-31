@@ -1,4 +1,3 @@
-#include("vec3.jl")
 
 mutable struct ray
     origin::point3

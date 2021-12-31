@@ -46,18 +46,17 @@ function main()
     material_ground = lambertian(color(0.8,0.8,0.0))
     material_center = lambertian(color(0.1,0.2,0.5))
     material_left = dielectric(1.5)
-    material_right = metal(color(0.8,0.6,0.2),1.0)
-    
+    material_right = metal(color(0.8,0.6,0.2), 0.0)
 
-    add(world,sphere(point3(0.0,-100.5,-1.0),100.0,material_ground))
-    add(world,sphere(point3(0.0,0.0,-1.0),0.5, material_center))
+    add(world,sphere(point3(0.0,-100.5, -1.0), 100.0, material_ground))
+    add(world,sphere(point3(0.0,0.0,-1.0), 0.5, material_center))
     add(world,sphere(point3(-1.0,0.0,-1.0),0.5,material_left))
-    add(world,sphere(point3(-1.0,0.0,-1.0),-0.4,material_left))
+    add(world,sphere(point3(-1.0,0.0,-1.0),-0.45,material_left))
     add(world,sphere(point3(1.0,0.0,-1.0),0.5,material_right))
 
 
     #Camera
-    cam = camera()
+    cam = camera(point3(-2.0,2.0,1.0), point3(0.0,0.0,-1.0), vec3(0.0,1.0,0.0), 20.0, aspect_ratio)
     
     #Render
     write(file,"P3\n")

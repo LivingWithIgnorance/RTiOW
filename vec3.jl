@@ -1,4 +1,3 @@
-#include("rtweekend.jl")
 import Base
 
 mutable struct vec3
