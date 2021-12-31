@@ -42,5 +42,36 @@ function scatter(m::metal,r_in::ray,rec::hit_record,attenuation::color,scattered
     return dot(scattered.direction,rec.normal) > 0
 end
 
+struct dielectric <: material
+    ir::Float64
+    dielectric(index_of_refraction::Float64) = new(index_of_refraction)
+end
+
+function scatter(d::dielectric,r_in::ray,rec::hit_record,attenuation::color,scattered::ray)
+    attenuation.x = 1.0
+    attenuation.y = 1.0
+    attenuation.z = 1.0
+    refraction_ratio = rec.front_face ? (1.0/d.ir) : d.ir
+
+    unit_direction = unit_vector(r_in.direction)
+    cos_theta = min(dot(-unit_direction, rec.normal),1.0)
+    sin_theta = sqrt(1.0 - cos_theta * cos_theta)
+    
+    cannot_refract = refraction_ratio * sin_theta > 1.0
+    direction = vec3()
+
+    if cannot_refract
+        direction = reflect(unit_direction, rec.normal)
+        scattered.direction = direction
+    else
+        direction = refract(unit_direction,rec.normal,refraction_ratio)
+        scattered.direction = direction
+    end
+
+    scattered.origin = rec.p
+    return true
+end
+
+
 
 
